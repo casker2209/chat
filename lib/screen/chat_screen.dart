@@ -52,8 +52,15 @@ class _ChatScreenState extends State<ChatScreen>{
                 message.id = element.id!;
                 if(element.reactions!=null) {
                   for (var reaction in element.reactions!.keys) {
+                    message.reaction.reactions.add(reaction);
                     for(var username in element.reactions![reaction]!.usernames!){
-                      message.reaction.
+                      if(!message.reaction.reactedUserIds.contains(username)) {
+                        if(widget.you.username == username) {
+                          message.reaction.reactedUserIds.add(_you.id);
+                        } else {
+                          message.reaction.reactedUserIds.add(_me.id);
+                        }
+                      };
                     }
                   }
                 }

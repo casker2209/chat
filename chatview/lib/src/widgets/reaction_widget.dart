@@ -25,6 +25,7 @@ import 'package:chatview/src/widgets/reactions_bottomsheet.dart';
 import 'package:flutter/material.dart';
 
 import '../../chatview.dart';
+import '../../utils/emoji_utils.dart';
 
 class ReactionWidget extends StatefulWidget {
   const ReactionWidget({
@@ -67,6 +68,8 @@ class _ReactionWidgetState extends State<ReactionWidget> {
   Widget build(BuildContext context) {
     //// Convert into set to remove reduntant values
     final reactionsSet = widget.reaction.reactions.toSet();
+    final reactionList = widget.reaction.reactions;
+    print(widget.reaction.reactedUserIds);
     return Positioned(
       bottom: 0,
       right: widget.isMessageBySender && needToExtend ? 0 : null,
@@ -102,12 +105,18 @@ class _ReactionWidgetState extends State<ReactionWidget> {
             ),
             child: Row(
               children: [
-                Text(
-                  reactionsSet.join(' '),
-                  style: TextStyle(
-                    fontSize: messageReactionConfig?.reactionSize ?? 13,
-                  ),
-                ),
+                if(reactionList.length > 0) Container(
+                  height: 13,
+                  width: 15*reactionList.length.toDouble(),
+                  child: ListView.builder(itemCount:reactionList.length,scrollDirection: Axis.horizontal,
+                      shrinkWrap: true ,
+                      itemBuilder: (context,index) => Container(
+                        height: 13,width: 13,
+                        child: Image.asset(EmojiUtils.EMOJI_MAP[reactionList[index]]!
+                            ,height: 13,width: 13,package: 'chatview'),
+                      )),
+                ) ,
+
                 if ((chatController?.chatUsers.length ?? 0) > 1) ...[
                   if (!(widget.reaction.reactedUserIds.length > 3) &&
                       !(reactionsSet.length > 1))
